@@ -60,7 +60,7 @@ export default function ProductBox({ _id, title, description, price, images }) {
       <ProductInfoBox>
         <Title href={url}>{title}</Title>
         <PriceRow>
-          <Price>${price}</Price>
+          <Price>${price.toLocaleString()}</Price>
           <Button onClick={() => addProduct(_id)} primary outline>
             <CartIcon /> Add
           </Button>

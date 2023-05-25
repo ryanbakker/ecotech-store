@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 const { createContext, useState, useEffect } = require("react");
 
 export const CartContext = createContext({});
@@ -32,9 +33,19 @@ export function CartContextProvider({ children }) {
     });
   }
 
+  function clearCart() {
+    setCartProducts([]);
+  }
+
   return (
     <CartContext.Provider
-      value={{ cartProducts, setCartProducts, addProduct, removeProduct }}
+      value={{
+        cartProducts,
+        setCartProducts,
+        addProduct,
+        removeProduct,
+        clearCart,
+      }}
     >
       {children}
     </CartContext.Provider>

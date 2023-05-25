@@ -78,7 +78,7 @@ const CityHolder = styled.div`
   gap: 5px;
 `;
 
-const PersonalDetailsForm = styled.form`
+const PersonalDetailsForm = styled.div`
   Button {
     margin-top: 10px;
   }
@@ -93,7 +93,8 @@ const CheckboxContainer = styled.div`
 // End of styling
 
 export default function CartPage() {
-  const { cartProducts, addProduct, removeProduct } = useContext(CartContext);
+  const { cartProducts, addProduct, removeProduct, clearCart } =
+    useContext(CartContext);
   const [products, setProducts] = useState([]);
 
   //   Form inputs
@@ -103,6 +104,7 @@ export default function CartPage() {
   const [postalCode, setPostalCode] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     if (cartProducts.length > 0) {
@@ -115,6 +117,17 @@ export default function CartPage() {
     }
   }, [cartProducts]);
 
+  //   Clear cart after Stripe payment
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    if (window?.location.href.includes("success")) {
+      setIsSuccess(true);
+      clearCart();
+    }
+  }, []);
+
   //   Increase / Decrease Product Amount
 
   function increaseProduct(id) {
@@ -125,11 +138,41 @@ export default function CartPage() {
     removeProduct(id);
   }
 
-  let total = 0;
+  async function goToPayment() {
+    const response = await axios.post("/api/checkout", {
+      name,
+      email,
+      streetAddress,
+      postalCode,
+      city,
+      country,
+      cartProducts,
+    });
+    if (response.data.url) {
+      window.location = response.data.url;
+    }
+  }
 
+  let total = 0;
   for (const productId of cartProducts) {
     const price = products.find((p) => p._id === productId)?.price || 0;
     total += price;
+  }
+
+  if (isSuccess) {
+    return (
+      <>
+        <Header />
+        <Center>
+          <ColumnsWrapper>
+            <Box>
+              <h1>Thanks for your order!</h1>
+              <p>We will email once it has been processed.</p>
+            </Box>
+          </ColumnsWrapper>
+        </Center>
+      </>
+    );
   }
 
   return (
@@ -206,7 +249,7 @@ export default function CartPage() {
           {!!cartProducts?.length && (
             <Box>
               <h2>Order Information</h2>
-              <PersonalDetailsForm method="post" action="/api/checkout">
+              <PersonalDetailsForm>
                 <Input
                   type="text"
                   placeholder="Full name"
@@ -259,7 +302,7 @@ export default function CartPage() {
                   </label>
                 </CheckboxContainer>
 
-                <Button type="submit" block primary>
+                <Button onClick={goToPayment} block primary>
                   Continue to payment
                 </Button>
               </PersonalDetailsForm>
