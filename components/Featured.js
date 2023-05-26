@@ -10,13 +10,21 @@ import { useContext } from "react";
 const Bg = styled.div`
   background-color: #222;
   color: #fff;
-  padding: 50px 0;
+  padding: 0 0 100px 0;
+
+  @media screen and (min-width: 768px) {
+    padding: 50px 0;
+  }
 `;
 
 const Title = styled.h1`
   margin: 0;
   font-weight: normal;
-  font-size: 2.8rem;
+  font-size: 2rem;
+
+  @media screen and (min-width: 768px) {
+    font-size: 2.8rem;
+  }
 `;
 
 const Desc = styled.p`
@@ -27,11 +35,34 @@ const Desc = styled.p`
 
 const ColumnsWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 40px;
 
   img {
     max-width: 100%;
+    max-height: 350px;
+    border-radius: 10px;
+  }
+
+  div:nth-child(1) {
+    order: 2;
+  }
+
+  div:nth-child(2) {
+    margin: 0 auto;
+  }
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+
+    div:nth-child(1) {
+      order: 0;
+    }
+
+    img {
+      max-width: 100%;
+    }
   }
 `;
 
@@ -62,7 +93,7 @@ export default function Featured({ product }) {
               <Desc>{product.description}</Desc>
               <ButtonsWrapper>
                 <ButtonLink
-                  href={"/products/" + product._id}
+                  href={"/product/" + product._id}
                   outline={1}
                   white={1}
                 >
@@ -76,7 +107,7 @@ export default function Featured({ product }) {
             </div>
           </Column>
           <Column>
-            <img src="/featured-image.webp" alt="Featured Product" />
+            <img src={product.images[0]} alt="Featured Product" />
           </Column>
         </ColumnsWrapper>
       </Center>

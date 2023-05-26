@@ -1,8 +1,8 @@
 import Featured from "@/components/Featured";
 import Header from "@/components/Header";
-import NewProducts from "@/components/NewProducts";
-import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
+import { mongooseConnect } from "@/lib/mongoose";
+import NewProducts from "@/components/NewProducts";
 
 export default function HomePage({ featuredProduct, newProducts }) {
   return (
@@ -15,12 +15,13 @@ export default function HomePage({ featuredProduct, newProducts }) {
 }
 
 export async function getServerSideProps() {
-  const featuredProductId = "646b5762ed4292ac5427e971";
   await mongooseConnect();
-  const featuredProduct = await Product.findById(featuredProductId);
+  const featuredProduct = await Product.findOne({}, null, {
+    sort: { _id: -1 }, // Sort in descending order based on _id
+  });
   const newProducts = await Product.find({}, null, {
-    sort: { _id: +1 },
-    limit: 8,
+    sort: { _id: -1 },
+    limit: 6,
   });
   return {
     props: {

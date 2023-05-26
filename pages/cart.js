@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 import Button from "@/components/Button";
 import { CartContext } from "@/components/CartContext";
@@ -11,9 +12,14 @@ import { styled } from "styled-components";
 
 const ColumnsWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1.3fr 0.7fr;
+  grid-template-columns: 1fr;
   gap: 40px;
   margin-top: 40px;
+  padding-bottom: 30px;
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1.3fr 0.7fr;
+  }
 `;
 
 const Box = styled.div`
@@ -23,18 +29,28 @@ const Box = styled.div`
 `;
 
 const ProductInfoCell = styled.td`
-  padding: 10px 0;
+  padding: 30px 0;
+  max-width: 100px;
 
   h4 {
     font-weight: 500;
     max-width: 50%;
   }
+
+  @media screen and (min-width: 768px) {
+    max-width: 170px;
+
+    h4 {
+      font-weight: 500;
+      max-width: 85%;
+    }
+  }
 `;
 
 const ProductImageBox = styled.div`
-  width: 120px;
-  height: 100px;
-  padding: 10px;
+  width: 80px;
+  height: 60px;
+  padding: 4px;
   background-color: transparent;
   border-radius: 6px;
   display: flex;
@@ -48,6 +64,11 @@ const ProductImageBox = styled.div`
     max-width: 100%;
     max-height: 100px;
     border-radius: 5px;
+  }
+
+  @media screen and (min-width: 768px) {
+    width: 120px;
+    height: 100px;
   }
 `;
 
